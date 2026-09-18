@@ -1,0 +1,7 @@
+# Local caches and the read-only pinned core checkout.
+var/
+.core/
+
+__pycache__/
+*.pyc
+.DS_Store
