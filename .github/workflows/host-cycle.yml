@@ -6,7 +6,12 @@ name: Sovereign Profile Host Cycle
 # never receives write access to this profile.
 on:
   schedule:
-    - cron: '50 * * * *'
+    # Every 2 hours (minute 50, even hours). Worst observed GitHub cron
+    # delay is well under an hour, so the newest watchdog_heartbeat stays
+    # comfortably under the 4.0h alarm threshold in
+    # runtime.schedule_ledger.check_watchdog_heartbeat. Halves the account-
+    # schedule job's monthly runs (720 -> 360) without weakening the alarm.
+    - cron: '50 */2 * * *'
   push:
     branches: [main]
     paths:
@@ -41,6 +46,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          filter: blob:none
 
       - uses: actions/setup-python@v5
         with:
@@ -199,6 +205,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          filter: blob:none
 
       - uses: actions/setup-python@v5
         with:
